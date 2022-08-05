@@ -3,18 +3,18 @@ const numbers = "0123456789"
 const lowerLetters = "abcdefghijklmnopqrstuvwxyz"
 const upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+// obtenemos el valor de cada select
+const passwordLengthSelect = document.getElementById('password-length')
+const checkSymbolsSelect = document.getElementById('check-symbols')
+const checkNumbersSelect = document.getElementById('check-numbers')
+const checkLowerCaseSelect = document.getElementById('check-lowercase')
+const checkUpperCaseSelect = document.getElementById('check-uppercase')
+const checkPreferencesSelect = document.getElementById('check-preferences')
+
 // buscamos el elemento del boton
 const generatePasswordBtn = document.getElementById("generate-password-btn")
 
 generatePasswordBtn?.addEventListener('click', () => {
-
-    // obtenemos el valor de cada select
-    const passwordLengthSelect = document.getElementById('password-length')
-    const checkSymbolsSelect = document.getElementById('check-symbols')
-    const checkNumbersSelect = document.getElementById('check-numbers')
-    const checkLowerCaseSelect = document.getElementById('check-lowercase')
-    const checkUpperCaseSelect = document.getElementById('check-uppercase')
-    const checkPreferencesSelect = document.getElementById('check-preferences')
 
 
     if (!checkSymbolsSelect.checked && !checkNumbersSelect.checked && !checkLowerCaseSelect.checked && !checkUpperCaseSelect.checked) {
@@ -58,12 +58,42 @@ generatePasswordBtn?.addEventListener('click', () => {
     passwordInputElement.value = password
 
     // guardar preferencias
+    const preferences = {
+        length: length,
+        symbols: checkSymbolsSelect.checked,
+        numbers: checkNumbersSelect.checked,
+        lowerLetters: checkLowerCaseSelect.checked,
+        upperLetters: checkUpperCaseSelect.checked
+    }
+
+    if (checkPreferencesSelect.checked) {
+        localStorage.setItem("preferences", JSON.stringify(preferences) )
+    } else {
+        localStorage.setItem("preferences", "")
+    }
 
 })
 
 
 const init = () => {
     // cargar preferencias
+    const preferences = localStorage.getItem("preferences")
+    console.log(preferences)
+
+    if (preferences) {
+
+        const parsedPreferences = JSON.parse(preferences)
+        console.log(parsedPreferences)
+
+        passwordLengthSelect.value = parsedPreferences.length
+        checkSymbolsSelect.checked = parsedPreferences.symbols
+        checkNumbersSelect.checked = parsedPreferences.numbers
+        checkLowerCaseSelect.cheked = parsedPreferences.lowerLetters
+        checkUpperCaseSelect.checked = parsedPreferences.upperLetters
+
+        checkPreferencesSelect.checked = true
+
+    }
 }
 
 init()
